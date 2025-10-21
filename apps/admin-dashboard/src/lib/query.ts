@@ -77,4 +77,9 @@ export const queryKeys = {
     sticker: () => [...queryKeys.analytics.all, 'sticker'] as const,
     fee: () => [...queryKeys.analytics.all, 'fee'] as const,
   },
+  profile: {
+    all: ['profile'] as const,
+    details: () => [...queryKeys.profile.all, 'detail'] as const,
+    detail: () => [...queryKeys.profile.details()] as const,
+  },
 }
