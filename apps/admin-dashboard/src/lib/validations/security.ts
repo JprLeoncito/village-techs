@@ -1,22 +1,18 @@
 import { z } from 'zod'
 
 export const gateEntryFormSchema = z.object({
-  entry_type: z.enum(['visitor', 'resident', 'service', 'delivery'], {
+  entry_type: z.enum(['vehicle', 'pedestrian', 'delivery', 'visitor'], {
     required_error: 'Please select an entry type',
   }),
-  direction: z.enum(['in', 'out'], {
-    required_error: 'Please select direction',
-  }),
-  visitor_name: z.string().optional(),
-  visitor_contact: z.string().optional(),
-  visiting_household_id: z.string().uuid().optional(),
+  gate_id: z.string().uuid().optional(),
   vehicle_plate: z.string().optional(),
-  purpose: z.string().optional(),
+  sticker_id: z.string().uuid().optional(),
+  household_id: z.string().uuid().optional(),
   notes: z.string().optional(),
 })
 
 export const exitGateEntrySchema = z.object({
-  exit_time: z.string().min(1, 'Exit time is required'),
+  exit_timestamp: z.string().min(1, 'Exit time is required'),
   notes: z.string().optional(),
 })
 

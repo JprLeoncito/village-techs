@@ -77,14 +77,13 @@ export function GateEntriesPage() {
     resolver: zodResolver(gateEntryFormSchema),
     defaultValues: {
       entry_type: 'visitor',
-      direction: 'in',
     },
   })
 
   const exitForm = useForm<ExitGateEntryFormData>({
     resolver: zodResolver(exitGateEntrySchema),
     defaultValues: {
-      exit_time: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+      exit_timestamp: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
     },
   })
 
@@ -92,14 +91,13 @@ export function GateEntriesPage() {
     setCreateDialogOpen(true)
     createForm.reset({
       entry_type: 'visitor',
-      direction: 'in',
     })
   }
 
   const handleRecordExit = (entry: GateEntry) => {
     setSelectedEntry(entry)
     exitForm.reset({
-      exit_time: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
+      exit_timestamp: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
     })
     setExitDialogOpen(true)
   }
@@ -131,8 +129,8 @@ export function GateEntriesPage() {
   const getEntryTypeIcon = (type: string) => {
     const icons = {
       visitor: Users,
-      resident: UserCheck,
-      service: Wrench,
+      vehicle: Car,
+      pedestrian: UserCheck,
       delivery: Package,
     }
     return icons[type as keyof typeof icons] || Users
@@ -141,8 +139,8 @@ export function GateEntriesPage() {
   const getEntryTypeBadge = (type: string) => {
     const variants = {
       visitor: { variant: 'default' as const, label: 'Visitor' },
-      resident: { variant: 'secondary' as const, label: 'Resident' },
-      service: { variant: 'outline' as const, label: 'Service' },
+      vehicle: { variant: 'secondary' as const, label: 'Vehicle' },
+      pedestrian: { variant: 'outline' as const, label: 'Pedestrian' },
       delivery: { variant: 'outline' as const, label: 'Delivery' },
     }
 
@@ -157,14 +155,16 @@ export function GateEntriesPage() {
     )
   }
 
-  const getDirectionBadge = (direction: string) => {
-    const Icon = direction === 'in' ? ArrowRight : ArrowLeft
-    const variant = direction === 'in' ? 'default' : 'secondary'
+  const getDirectionBadge = (direction?: string) => {
+    // Default to 'in' if direction is not available (migration may not have run)
+    const dir = direction || 'in'
+    const Icon = dir === 'in' ? ArrowRight : ArrowLeft
+    const variant = dir === 'in' ? 'default' : 'secondary'
 
     return (
       <Badge variant={variant as any} className="flex items-center gap-1 w-fit">
         <Icon className="h-3 w-3" />
-        {direction.toUpperCase()}
+        {dir.toUpperCase()}
       </Badge>
     )
   }
@@ -314,12 +314,12 @@ export function GateEntriesPage() {
                       <TableCell className="text-gray-900 dark:text-gray-100">
                         <div className="text-sm">
                           <div className="font-medium">
-                            {format(new Date(entry.entry_time), 'h:mm a')}
+                            {format(new Date(entry.entry_timestamp), 'h:mm a')}
                           </div>
-                          {entry.exit_time && (
+                          {entry.exit_timestamp && (
                             <div className="text-gray-500 dark:text-gray-400 flex items-center gap-1">
                               <LogOut className="h-3 w-3" />
-                              {format(new Date(entry.exit_time), 'h:mm a')}
+                              {format(new Date(entry.exit_timestamp), 'h:mm a')}
                             </div>
                           )}
                         </div>
@@ -328,9 +328,9 @@ export function GateEntriesPage() {
                       <TableCell className="text-gray-900 dark:text-gray-100">{getDirectionBadge(entry.direction)}</TableCell>
                       <TableCell className="text-gray-900 dark:text-gray-100">
                         <div className="text-sm">
-                          <div className="font-medium">{entry.visitor_name || '-'}</div>
-                          {entry.visitor_contact && (
-                            <div className="text-gray-500 dark:text-gray-400">{entry.visitor_contact}</div>
+                          <div className="font-medium">{entry.visitor_name || entry.household_name || '-'}</div>
+                          {entry.contact_number && (
+                            <div className="text-gray-500 dark:text-gray-400">{entry.contact_number}</div>
                           )}
                         </div>
                       </TableCell>
@@ -363,11 +363,11 @@ export function GateEntriesPage() {
                       </TableCell>
                       <TableCell className="text-gray-900 dark:text-gray-100">
                         <div className="text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
-                          {entry.purpose || '-'}
+                          {entry.purpose || entry.notes || '-'}
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        {entry.direction === 'in' && !entry.exit_time && (
+                        {(!entry.direction || entry.direction === 'in') && !entry.exit_timestamp && (
                           <Button
                             variant="ghost"
                             size="sm"
@@ -398,70 +398,40 @@ export function GateEntriesPage() {
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={createForm.handleSubmit(onCreateSubmit)} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="entry_type" className="text-gray-700 dark:text-gray-300">Entry Type *</Label>
-                <Select
-                  value={createForm.watch('entry_type')}
-                  onValueChange={(value) => createForm.setValue('entry_type', value as any)}
-                >
-                  <SelectTrigger className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
-                    <SelectItem value="visitor" className="text-gray-900 dark:text-gray-100">Visitor</SelectItem>
-                    <SelectItem value="resident" className="text-gray-900 dark:text-gray-100">Resident</SelectItem>
-                    <SelectItem value="service" className="text-gray-900 dark:text-gray-100">Service Provider</SelectItem>
-                    <SelectItem value="delivery" className="text-gray-900 dark:text-gray-100">Delivery</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="direction" className="text-gray-700 dark:text-gray-300">Direction *</Label>
-                <Select
-                  value={createForm.watch('direction')}
-                  onValueChange={(value) => createForm.setValue('direction', value as any)}
-                >
-                  <SelectTrigger className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
-                    <SelectItem value="in" className="text-gray-900 dark:text-gray-100">Entering</SelectItem>
-                    <SelectItem value="out" className="text-gray-900 dark:text-gray-100">Exiting</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="space-y-2">
+              <Label htmlFor="entry_type" className="text-gray-700 dark:text-gray-300">Entry Type *</Label>
+              <Select
+                value={createForm.watch('entry_type')}
+                onValueChange={(value) => createForm.setValue('entry_type', value as any)}
+              >
+                <SelectTrigger className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700">
+                  <SelectItem value="visitor" className="text-gray-900 dark:text-gray-100">Visitor</SelectItem>
+                  <SelectItem value="vehicle" className="text-gray-900 dark:text-gray-100">Vehicle</SelectItem>
+                  <SelectItem value="pedestrian" className="text-gray-900 dark:text-gray-100">Pedestrian</SelectItem>
+                  <SelectItem value="delivery" className="text-gray-900 dark:text-gray-100">Delivery</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="visitor_name" className="text-gray-700 dark:text-gray-300">Name</Label>
+                <Label htmlFor="vehicle_plate" className="text-gray-700 dark:text-gray-300">Vehicle Plate</Label>
                 <Input
-                  id="visitor_name"
-                  {...createForm.register('visitor_name')}
-                  placeholder="Full name"
+                  id="vehicle_plate"
+                  {...createForm.register('vehicle_plate')}
+                  placeholder="e.g., ABC 1234"
                   className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="visitor_contact" className="text-gray-700 dark:text-gray-300">Contact Number</Label>
-                <Input
-                  id="visitor_contact"
-                  {...createForm.register('visitor_contact')}
-                  placeholder="Phone number"
-                  className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="visiting_household_id" className="text-gray-700 dark:text-gray-300">Visiting Household</Label>
+                <Label htmlFor="household_id" className="text-gray-700 dark:text-gray-300">Household (Optional)</Label>
                 <Select
-                  value={createForm.watch('visiting_household_id')}
-                  onValueChange={(value) => createForm.setValue('visiting_household_id', value)}
+                  value={createForm.watch('household_id')}
+                  onValueChange={(value) => createForm.setValue('household_id', value)}
                 >
                   <SelectTrigger className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100">
                     <SelectValue placeholder="Select household" />
@@ -478,26 +448,6 @@ export function GateEntriesPage() {
                   </SelectContent>
                 </Select>
               </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="vehicle_plate" className="text-gray-700 dark:text-gray-300">Vehicle Plate</Label>
-                <Input
-                  id="vehicle_plate"
-                  {...createForm.register('vehicle_plate')}
-                  placeholder="e.g., ABC 1234"
-                  className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="purpose" className="text-gray-700 dark:text-gray-300">Purpose of Visit</Label>
-              <Input
-                id="purpose"
-                {...createForm.register('purpose')}
-                placeholder="e.g., Family visit, delivery, maintenance"
-                className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-              />
             </div>
 
             <div className="space-y-2">
@@ -538,19 +488,19 @@ export function GateEntriesPage() {
           </DialogHeader>
           <form onSubmit={exitForm.handleSubmit(onExitSubmit)} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="exit_time" className="text-gray-700 dark:text-gray-300">Exit Time *</Label>
+              <Label htmlFor="exit_timestamp" className="text-gray-700 dark:text-gray-300">Exit Time *</Label>
               <Input
-                id="exit_time"
+                id="exit_timestamp"
                 type="datetime-local"
-                {...exitForm.register('exit_time')}
+                {...exitForm.register('exit_timestamp')}
                 className="border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="exit_notes" className="text-gray-700 dark:text-gray-300">Exit Notes (Optional)</Label>
+              <Label htmlFor="notes" className="text-gray-700 dark:text-gray-300">Exit Notes (Optional)</Label>
               <Textarea
-                id="exit_notes"
+                id="notes"
                 {...exitForm.register('notes')}
                 placeholder="Any additional notes about the exit..."
                 rows={3}

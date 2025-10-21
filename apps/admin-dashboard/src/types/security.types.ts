@@ -1,19 +1,26 @@
 export interface GateEntry {
   id: string
   tenant_id: string
-  entry_type: 'visitor' | 'resident' | 'service' | 'delivery'
-  direction: 'in' | 'out'
-  visitor_name: string | null
-  visitor_contact: string | null
-  visiting_household_id: string | null
+  gate_id: string
+  entry_timestamp: string
+  entry_type: 'vehicle' | 'pedestrian' | 'delivery' | 'visitor'
   vehicle_plate: string | null
-  purpose: string | null
-  officer_on_duty_id: string
-  entry_time: string
-  exit_time: string | null
+  sticker_id: string | null
+  household_id: string | null
+  security_officer_id: string
   notes: string | null
   created_at: string
-  updated_at: string
+
+  // Fields added by security migration (may be null if migration hasn't run)
+  exit_timestamp?: string | null
+  direction?: 'in' | 'out'
+  household_name?: string | null
+  visitor_name?: string | null
+  contact_number?: string | null
+  purpose?: string | null
+  photos?: string[] | null
+  security_officer_name?: string | null
+  linked_entry_id?: string | null
 }
 
 export interface Incident {
@@ -51,19 +58,17 @@ export interface SecurityOfficer {
 }
 
 export interface CreateGateEntryInput {
-  entry_type: 'visitor' | 'resident' | 'service' | 'delivery'
-  direction: 'in' | 'out'
-  visitor_name?: string
-  visitor_contact?: string
-  visiting_household_id?: string
+  entry_type: 'vehicle' | 'pedestrian' | 'delivery' | 'visitor'
+  gate_id?: string
   vehicle_plate?: string
-  purpose?: string
+  sticker_id?: string
+  household_id?: string
   notes?: string
 }
 
 export interface UpdateGateEntryInput {
   entry_id: string
-  exit_time?: string
+  exit_timestamp?: string
   notes?: string
 }
 
