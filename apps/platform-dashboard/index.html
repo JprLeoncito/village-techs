@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#3b82f6" />
+    <title>Village Tech - Platform Dashboard</title>
+    <script>
+      // Dark mode detection script to prevent flash
+      (function() {
+        const theme = localStorage.getItem('theme-storage')
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+
+        let resolvedTheme = 'light'
+        if (theme) {
+          try {
+            const parsed = JSON.parse(theme)
+            resolvedTheme = parsed.state.theme === 'dark' || (parsed.state.theme === 'system' && systemDark) ? 'dark' : 'light'
+          } catch {
+            resolvedTheme = systemDark ? 'dark' : 'light'
+          }
+        } else {
+          resolvedTheme = systemDark ? 'dark' : 'light'
+        }
+
+        document.documentElement.classList.add(resolvedTheme)
+      })()
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

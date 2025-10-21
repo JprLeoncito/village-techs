@@ -1,0 +1,88 @@
+{
+  "expo": {
+    "name": "Village Tech Residence",
+    "slug": "residence-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "scheme": "residence-app",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#10b981"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.villagetech.residence",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app uses the camera to capture photos for household members, document uploads, and delivery confirmations.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to your photo library to select images for profiles and document uploads.",
+        "NSPhotoLibraryAddUsageDescription": "This app saves QR codes and receipts to your photo library.",
+        "NSFaceIDUsageDescription": "This app uses Face ID for secure authentication.",
+        "NSLocationWhenInUseUsageDescription": "This app uses your location to verify you are within the community premises.",
+        "NSUserTrackingUsageDescription": "This app does not track you across apps or websites.",
+        "UIBackgroundModes": ["remote-notification"]
+      },
+      "config": {
+        "usesNonExemptEncryption": false
+      },
+      "buildNumber": "1"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#10b981"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "package": "com.villagetech.residence",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.USE_FINGERPRINT",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.VIBRATE",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.INTERNET"
+      ],
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "residence-app",
+              "host": "payment-return"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "notification": {
+      "icon": "./assets/notification-icon.png",
+      "color": "#10b981",
+      "androidMode": "default",
+      "androidCollapsedTitle": "Village Tech Notifications"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 30000,
+      "checkAutomatically": "ON_LOAD",
+      "enabled": true
+    },
+    "plugins": [],
+    "extra": {
+      "eas": {
+        "projectId": "YOUR_EAS_PROJECT_ID"
+      }
+    }
+  }
+}

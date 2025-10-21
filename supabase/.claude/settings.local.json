@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/jaspe/OneDrive/Documents/GitHub/village-techs/**)",
+      "Bash(mv:*)",
+      "Bash(supabase db reset:*)",
+      "Bash(rm:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

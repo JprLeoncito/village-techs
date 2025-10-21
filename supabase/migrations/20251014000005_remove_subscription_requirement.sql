@@ -1,0 +1,4 @@
+-- =========================================
+-- REMOVE SUBSCRIPTION REQUIREMENT
+-- Migration no longer needed - subscription_plan_id column doesn't exist
+-- =========================================

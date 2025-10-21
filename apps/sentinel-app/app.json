@@ -1,0 +1,84 @@
+{
+  "expo": {
+    "name": "Sentinel Security",
+    "slug": "sentinel-security-app",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#3b82f6"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSBluetoothAlwaysUsageDescription": "Sentinel needs Bluetooth to connect to RFID readers for vehicle scanning.",
+        "NSBluetoothPeripheralUsageDescription": "Sentinel uses Bluetooth to communicate with RFID scanning hardware.",
+        "NSLocationWhenInUseUsageDescription": "Sentinel needs location access to verify officers are at assigned gates.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "Sentinel needs location access to track shift coverage and ensure officer safety.",
+        "NSCameraUsageDescription": "Sentinel needs camera access to scan QR codes, capture entry photos, and document incidents.",
+        "NSMicrophoneUsageDescription": "Sentinel may need microphone access for incident reporting with audio notes.",
+        "NSPhotoLibraryUsageDescription": "Sentinel needs photo library access to select evidence for incident reports."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#3b82f6"
+      },
+      "edgeToEdgeEnabled": true,
+      "predictiveBackGestureEnabled": false,
+      "permissions": [
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_SCAN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.ACCESS_BACKGROUND_LOCATION",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.WAKE_LOCK"
+      ],
+      "package": "com.villagetech.sentinel"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Sentinel needs camera access to scan QR codes and capture photos for incident reports."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Sentinel needs location access to verify officers are at assigned gates and track shift coverage."
+        }
+      ],
+      [
+        "expo-barcode-scanner",
+        {
+          "cameraPermission": "Sentinel needs camera access to scan QR codes for guest verification."
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#3b82f6",
+          "sounds": [
+            "./assets/sounds/notification.wav"
+          ]
+        }
+      ]
+    ]
+  }
+}

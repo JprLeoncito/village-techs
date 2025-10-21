@@ -1,0 +1,55 @@
+{
+  "cli": {
+    "version": ">= 10.2.1"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "http://127.0.0.1:54321",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH",
+        "EXPO_PUBLIC_API_URL": "http://127.0.0.1:54321",
+        "EXPO_PUBLIC_ENVIRONMENT": "development",
+        "EXPO_PUBLIC_DEBUG_MODE": "true",
+        "EXPO_PUBLIC_LOG_LEVEL": "debug"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "channel": "preview",
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "${SUPABASE_URL}",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "${SUPABASE_ANON_KEY}",
+        "EXPO_PUBLIC_API_URL": "${API_URL}",
+        "EXPO_PUBLIC_ENVIRONMENT": "staging",
+        "EXPO_PUBLIC_DEBUG_MODE": "false",
+        "EXPO_PUBLIC_LOG_LEVEL": "warn"
+      }
+    },
+    "production": {
+      "channel": "production",
+      "env": {
+        "EXPO_PUBLIC_SUPABASE_URL": "${SUPABASE_URL}",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "${SUPABASE_ANON_KEY}",
+        "EXPO_PUBLIC_API_URL": "${API_URL}",
+        "EXPO_PUBLIC_ENVIRONMENT": "production",
+        "EXPO_PUBLIC_DEBUG_MODE": "false",
+        "EXPO_PUBLIC_LOG_LEVEL": "error"
+      }
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "your-apple-id@example.com",
+        "ascAppId": "your-app-store-connect-app-id",
+        "appleTeamId": "your-apple-team-id"
+      },
+      "android": {
+        "serviceAccountKeyPath": "./google-service-account.json",
+        "track": "production"
+      }
+    }
+  }
+}
